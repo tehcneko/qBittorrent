@@ -429,6 +429,19 @@ void Preferences::setWinStartup(const bool b)
         settings.remove(profileID);
     }
 }
+
+QString Preferences::getStyle() const
+{
+    return value<QString>(u"Appearance/Style"_s);
+}
+
+void Preferences::setStyle(const QString &styleName)
+{
+    if (styleName == getStyle())
+        return;
+
+    setValue(u"Appearance/Style"_s, styleName);
+}
 #endif // Q_OS_WIN
 
 // Downloads
@@ -1328,6 +1341,19 @@ void Preferences::setMarkOfTheWebEnabled(const bool enabled)
         return;
 
     setValue(u"Preferences/Advanced/markOfTheWeb"_s, enabled);
+}
+
+bool Preferences::isIgnoreSSLErrors() const
+{
+    return value(u"Preferences/Advanced/IgnoreSSLErrors"_s, false);
+}
+
+void Preferences::setIgnoreSSLErrors(const bool enabled)
+{
+    if (enabled == isIgnoreSSLErrors())
+        return;
+
+    setValue(u"Preferences/Advanced/IgnoreSSLErrors"_s, enabled);
 }
 
 Path Preferences::getPythonExecutablePath() const
