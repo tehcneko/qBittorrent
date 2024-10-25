@@ -43,7 +43,7 @@
   !define QBT_INSTALLER_FILENAME "${QBT_VERSION}_x64"
 !endif
 
-!define /ifndef QBT_DIST_DIR "qBittorrent Enhanced"
+!define /ifndef QBT_DIST_DIR "qBittorrent"
 !define /ifndef QBT_NSIS_PLUGINS_DIR "NSISPlugins"
 
 Unicode true
@@ -81,7 +81,7 @@ XPStyle on
 Name "qBittorrent ${QBT_INSTALLER_WINDOWNAME}"
 
 ; The file to write
-OutFile "qbittorrent_${QBT_INSTALLER_FILENAME}_setup.exe"
+OutFile "qbittorrent_enhanced_${QBT_INSTALLER_FILENAME}_setup.exe"
 
 ;Installer Version Information
 VIAddVersionKey "ProductName" "qBittorrent Enhanced"
