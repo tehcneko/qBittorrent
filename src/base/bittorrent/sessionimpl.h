@@ -55,6 +55,7 @@
 #include "sessionstatus.h"
 #include "torrentinfo.h"
 #include "trackerentrystatus.h"
+#include "base/net/downloadmanager.h"
 
 class QString;
 class QThread;
@@ -430,6 +431,7 @@ namespace BitTorrent
         bool isListening() const override;
 
         void banIP(const QString &ip) override;
+        void shadowbanIP(const QString &ip) override;
 
         bool isKnownTorrent(const InfoHash &infoHash) const override;
         bool addTorrent(const TorrentDescriptor &torrentDescr, const AddTorrentParams &params = {}) override;
@@ -483,6 +485,27 @@ namespace BitTorrent
 
         void invokeAsync(std::function<void ()> func);
 
+        // Auto ban Unknown Peer
+        bool isAutoBanUnknownPeerEnabled() const override;
+        void setAutoBanUnknownPeer(bool value) override;
+
+        // Auto ban Bittorrent Media Player Peer
+        bool isAutoBanBTPlayerPeerEnabled() const override;
+        void setAutoBanBTPlayerPeer(bool value) override;
+
+        // Shadowban Peers
+        bool isShadowBanEnabled() const override;
+        void setShadowBan(bool value) override;
+        QStringList shadowBannedIPs() const override;
+        void setShadowBannedIPs(const QStringList &newList) override;
+
+        // Trackers list
+        bool isAutoUpdateTrackersEnabled() const override;
+        void setAutoUpdateTrackersEnabled(bool enabled) override;
+        QString publicTrackers() const override;
+        void setPublicTrackers(const QString &trackers) override;
+        void updatePublicTracker() override;
+
     signals:
         void addTorrentAlertsReceived(qsizetype count);
 
@@ -495,6 +518,9 @@ namespace BitTorrent
         void handleIPFilterError();
         void fileSearchFinished(const TorrentID &id, const Path &savePath, const PathList &fileNames);
         void torrentContentRemovingFinished(const QString &torrentName, const QString &errorMessage);
+
+        // Public Tracker handle slots
+        void handlePublicTrackerTxtDownloadFinished(const Net::DownloadResult &result);
 
     private:
         struct ResumeSessionContext;
@@ -588,6 +614,8 @@ namespace BitTorrent
         void saveResumeData();
         void saveTorrentsQueue();
         void removeTorrentsQueue();
+
+        void populatePublicTrackers();
 
         std::vector<lt::alert *> getPendingAlerts(lt::time_duration time = lt::time_duration::zero()) const;
 
@@ -741,6 +769,15 @@ namespace BitTorrent
         bool m_IPFilteringConfigured = false;
         mutable bool m_listenInterfaceConfigured = false;
 
+        // Enhanced Function
+        CachedSettingValue<QString> m_publicTrackers;
+        CachedSettingValue<bool> m_autoBanUnknownPeer;
+        CachedSettingValue<bool> m_autoBanBTPlayerPeer;
+        CachedSettingValue<bool> m_shadowBan;
+        CachedSettingValue<QStringList> m_shadowBannedIPs;
+        CachedSettingValue<bool> m_isAutoUpdateTrackersEnabled;
+        QTimer *m_updateTimer;
+
         bool m_isRestored = false;
         bool m_isPaused = isStartPaused();
 
@@ -751,6 +788,7 @@ namespace BitTorrent
 
         int m_numResumeData = 0;
         QVector<TrackerEntry> m_additionalTrackerEntries;
+        QVector<TrackerEntry> m_publicTrackerList;
         QVector<QRegularExpression> m_excludedFileNamesRegExpList;
 
         // Statistics

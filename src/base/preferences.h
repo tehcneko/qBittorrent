@@ -424,6 +424,16 @@ public:
     int addNewTorrentDialogSavePathHistoryLength() const;
     void setAddNewTorrentDialogSavePathHistoryLength(int value);
 
+    // Enhanced option
+    bool getAutoBanUnknownPeer() const;
+    void setAutoBanUnknownPeer(const bool checked);
+    bool getAutoBanBTPlayerPeer() const;
+    void setAutoBanBTPlayerPeer(const bool checked);
+    bool getShadowBan() const;
+    void setShadowBan(const bool checked);
+    QString customizeTrackersListUrl() const;
+    void setCustomizeTrackersListUrl(const QString &trackersUrl);
+
 public slots:
     void setStatusFilterState(bool checked);
     void setCategoryFilterState(bool checked);

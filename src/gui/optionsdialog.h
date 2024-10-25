@@ -33,6 +33,7 @@
 
 #include "base/pathfwd.h"
 #include "base/settingvalue.h"
+#include "base/net/downloadmanager.h"
 #include "guiapplicationcomponent.h"
 
 class QListWidgetItem;
@@ -98,6 +99,7 @@ private slots:
     void on_IpFilterRefreshBtn_clicked();
     void handleIPFilterParsed(bool error, int ruleCount);
     void on_banListButton_clicked();
+    void on_shadowBanListButton_clicked();
     void on_IPSubnetWhitelistButton_clicked();
     void on_randomButton_clicked();
     void on_addWatchedFolderButton_clicked();
@@ -109,6 +111,8 @@ private slots:
     void webUIHttpsCertChanged(const Path &path);
     void webUIHttpsKeyChanged(const Path &path);
     void on_registerDNSBtn_clicked();
+    void on_fetchButton_clicked();
+    void handlePublicTrackersListChanged(const Net::DownloadResult &result);
 #endif
 
 private:
@@ -179,6 +183,7 @@ private:
     // IP Filter
     bool isIPFilteringEnabled() const;
     Path getFilter() const;
+    bool isShadowBanEnabled() const;
     // Queueing system
     bool isQueueingSystemEnabled() const;
     int getMaxActiveDownloads() const;

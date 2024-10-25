@@ -77,7 +77,7 @@ window.qBittorrent.Client = (() => {
         const emDash = "\u2014";
         const qbtVersion = window.qBittorrent.Cache.qbtVersion.get();
         const suffix = window.qBittorrent.Cache.preferences.get()["app_instance_name"] || "";
-        const title = `qBittorrent ${qbtVersion} QBT_TR(WebUI)QBT_TR[CONTEXT=OptionsDialog]`
+        const title = `qBittorrent Enhanced Edition ${qbtVersion} QBT_TR(WebUI)QBT_TR[CONTEXT=OptionsDialog]`
             + ((suffix.length > 0) ? ` ${emDash} ${suffix}` : "");
         return title;
     };
