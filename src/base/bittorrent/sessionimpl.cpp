@@ -122,7 +122,7 @@ const int MAX_PROCESSING_RESUMEDATA_COUNT = 50;
 namespace
 {
     const char PEER_ID[] = "qB";
-    const auto USER_AGENT = QStringLiteral("qBittorrent Enhanced/" QBT_VERSION_2);
+    const auto USER_AGENT = QStringLiteral("qBittorrent/" QBT_VERSION_3);
     const QString DEFAULT_DHT_BOOTSTRAP_NODES = u"dht.libtorrent.org:25401, dht.transmissionbt.com:6881, router.bittorrent.com:6881"_s;
 
     void torrentQueuePositionUp(const lt::torrent_handle &handle)
@@ -1668,7 +1668,7 @@ void SessionImpl::initializeNativeSession()
 {
     lt::settings_pack pack = loadLTSettings();
 
-    const std::string peerId = lt::generate_fingerprint(PEER_ID, QBT_VERSION_MAJOR, QBT_VERSION_MINOR, QBT_VERSION_BUGFIX, QBT_VERSION_BUILD);
+    const std::string peerId = lt::generate_fingerprint(PEER_ID, QBT_VERSION_MAJOR, QBT_VERSION_MINOR, QBT_VERSION_BUGFIX, 0);
     pack.set_str(lt::settings_pack::peer_fingerprint, peerId);
 
     pack.set_bool(lt::settings_pack::listen_system_port_fallback, false);
