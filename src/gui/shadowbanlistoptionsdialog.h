@@ -1,6 +1,6 @@
 /*
  * Bittorrent Client using Qt and libtorrent.
- * Copyright (C) 2018  Vladimir Golovnev <glassez@yandex.ru>
+ * Copyright (C) 2016  Alexandr Milovantsev <dzmat@yandex.ru>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,25 +28,37 @@
 
 #pragma once
 
-#include "apicontroller.h"
+#include <QDialog>
 
-class TransferController : public APIController
+#include "base/settingvalue.h"
+
+class QSortFilterProxyModel;
+class QStringListModel;
+
+namespace Ui
+{
+    class ShadowBanListOptionsDialog;
+}
+
+class ShadowBanListOptionsDialog final : public QDialog
 {
     Q_OBJECT
-    Q_DISABLE_COPY_MOVE(TransferController)
+    Q_DISABLE_COPY_MOVE(ShadowBanListOptionsDialog)
 
 public:
-    using APIController::APIController;
+    explicit ShadowBanListOptionsDialog(QWidget *parent = nullptr);
+    ~ShadowBanListOptionsDialog() override;
 
 private slots:
-    void infoAction();
-    void speedLimitsModeAction();
-    void setSpeedLimitsModeAction();
-    void toggleSpeedLimitsModeAction();
-    void uploadLimitAction();
-    void downloadLimitAction();
-    void setUploadLimitAction();
-    void setDownloadLimitAction();
-    void banPeersAction();
-    void shadowbanPeersAction();
+    void on_buttonBox_accepted();
+    void on_buttonBanIP_clicked();
+    void on_buttonDeleteIP_clicked();
+    void on_txtIP_textChanged(const QString &ip);
+
+private:
+    Ui::ShadowBanListOptionsDialog *m_ui = nullptr;
+    SettingValue<QSize> m_storeDialogSize;
+    QStringListModel *m_model = nullptr;
+    QSortFilterProxyModel *m_sortFilter = nullptr;
+    bool m_modified = false;
 };

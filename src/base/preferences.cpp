@@ -2192,6 +2192,36 @@ void Preferences::setAddNewTorrentDialogAttached(const bool attached)
     setValue(u"AddNewTorrentDialog/Attached"_s, attached);
 }
 
+bool Preferences::getAutoBanUnknownPeer() const
+{
+    return value(u"Preferences/Advanced/AutoBanUnknownPeer"_s, false);
+}
+
+void Preferences::setAutoBanUnknownPeer(const bool checked)
+{
+    setValue(u"Preferences/Advanced/AutoBanUnknownPeer"_s, checked);
+}
+
+bool Preferences::getAutoBanBTPlayerPeer() const
+{
+    return value(u"Preferences/Advanced/AutoBanBTPlayerPeer"_s, false);
+}
+
+void Preferences::setAutoBanBTPlayerPeer(const bool checked)
+{
+    setValue(u"Preferences/Advanced/AutoBanBTPlayerPeer"_s, checked);
+}
+
+bool Preferences::getShadowBan() const
+{
+    return value(u"Preferences/Advanced/ShadowBan"_s, false);
+}
+
+void Preferences::setShadowBan(const bool checked)
+{
+    setValue(u"Preferences/Advanced/ShadowBan"_s, checked);
+}
+
 void Preferences::apply()
 {
     if (SettingsStorage::instance()->save())

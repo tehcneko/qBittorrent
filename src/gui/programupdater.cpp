@@ -82,7 +82,7 @@ namespace
 }
 
 void ProgramUpdater::checkForUpdates()
-{
+{/*
     // Don't change this User-Agent. In case our updater goes haywire,
     // the filehost can identify it and contact us.
     const auto USER_AGENT = QStringLiteral("qBittorrent/" QBT_VERSION_2 " ProgramUpdater (www.qbittorrent.org)");
@@ -104,7 +104,7 @@ void ProgramUpdater::checkForUpdates()
     {
         fallbackDownloadFinished(result, m_qbtBackupVersion);
     });
-}
+*/}
 
 ProgramUpdater::Version ProgramUpdater::getNewVersion() const
 {
@@ -118,6 +118,16 @@ ProgramUpdater::Version ProgramUpdater::getNewVersion() const
         return m_qbtBackupVersion;
     }
     Q_UNREACHABLE();
+}
+
+QString ProgramUpdater::getNewContent() const
+{
+  return m_content;
+}
+
+QString ProgramUpdater::getNextUpdate() const
+{
+  return m_nextUpdate;
 }
 
 void ProgramUpdater::rssDownloadFinished(const Net::DownloadResult &result)
@@ -140,6 +150,8 @@ void ProgramUpdater::rssDownloadFinished(const Net::DownloadResult &result)
     const QString variant = buildVariant();
     bool inItem = false;
     QString version;
+    QString content;
+    QString nextUpdate;
     QString updateLink;
     QString type;
     QXmlStreamReader xml(result.data);
@@ -158,6 +170,10 @@ void ProgramUpdater::rssDownloadFinished(const Net::DownloadResult &result)
                 type = getStringValue(xml);
             else if (inItem && (xml.name() == u"version"))
                 version = getStringValue(xml);
+            else if (inItem && (xml.name() == u"content"))
+                content = getStringValue(xml);
+            else if (inItem && (xml.name() == u"update"))
+                nextUpdate = getStringValue(xml);
         }
         else if (xml.isEndElement())
         {
@@ -174,7 +190,9 @@ void ProgramUpdater::rssDownloadFinished(const Net::DownloadResult &result)
                         {
                             m_fosshubVersion = tmpVer;
                             m_updateURL = updateLink;
+                            m_content = content;
                         }
+                        m_nextUpdate = nextUpdate;
                     }
                     break;
                 }
@@ -183,6 +201,8 @@ void ProgramUpdater::rssDownloadFinished(const Net::DownloadResult &result)
                 updateLink.clear();
                 type.clear();
                 version.clear();
+                content.clear();
+                nextUpdate.clear();
             }
         }
     }
