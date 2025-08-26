@@ -263,6 +263,8 @@ void AppController::preferencesAction()
     // Proxy Server
     const auto *proxyManager = Net::ProxyConfigurationManager::instance();
     Net::ProxyConfiguration proxyConf = proxyManager->proxyConfiguration();
+    data[u"auto_ban_unknown_peer"_s] = session->isAutoBanUnknownPeerEnabled();
+    data[u"auto_ban_bt_player_peer"_s] = session->isAutoBanBTPlayerPeerEnabled();
     data[u"proxy_type"_s] = Utils::String::fromEnum(proxyConf.type);
     data[u"proxy_ip"_s] = proxyConf.ip;
     data[u"proxy_port"_s] = proxyConf.port;
@@ -281,6 +283,8 @@ void AppController::preferencesAction()
     data[u"ip_filter_path"_s] = session->IPFilterFile().toString();
     data[u"ip_filter_trackers"_s] = session->isTrackerFilteringEnabled();
     data[u"banned_IPs"_s] = session->bannedIPs().join(u'\n');
+    data[u"shadow_ban_enabled"_s] = session->isShadowBanEnabled();
+    data[u"shadow_banned_IPs"_s] = session->shadowBannedIPs().join(u'\n');
 
     // Speed
     // Global Rate Limits
@@ -805,6 +809,14 @@ void AppController::setPreferencesAction()
         session->setTrackerFilteringEnabled(it.value().toBool());
     if (hasKey(u"banned_IPs"_s))
         session->setBannedIPs(it.value().toString().split(u'\n', Qt::SkipEmptyParts));
+    if (hasKey(u"auto_ban_unknown_peer"_s))
+        session->setAutoBanUnknownPeer(it.value().toBool());
+    if (hasKey(u"auto_ban_bt_player_peer"_s))
+        session->setAutoBanBTPlayerPeer(it.value().toBool());
+    if (hasKey(u"shadow_ban"_s))
+        session->setShadowBan(it.value().toBool());
+    if (hasKey(u"shadow_banned_IPs"_s))
+        session->setShadowBannedIPs(it.value().toString().split(u'\n', Qt::SkipEmptyParts));
 
     // Speed
     // Global Rate Limits
