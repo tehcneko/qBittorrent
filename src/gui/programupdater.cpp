@@ -68,7 +68,7 @@ namespace
 }
 
 void ProgramUpdater::checkForUpdates()
-{
+{/*
     // Don't change this User-Agent. In case our updater goes haywire,
     // the filehost can identify it and contact us.
     const auto USER_AGENT = QStringLiteral("qBittorrent/" QBT_VERSION_2 " ProgramUpdater (www.qbittorrent.org)");
@@ -88,7 +88,7 @@ void ProgramUpdater::checkForUpdates()
     {
         fallbackDownloadFinished(result, m_qbtBackupVersion);
     });
-}
+*/}
 
 ProgramUpdater::Version ProgramUpdater::getNewVersion() const
 {

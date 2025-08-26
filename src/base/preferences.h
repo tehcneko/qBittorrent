@@ -447,6 +447,14 @@ public:
     bool isAddNewTorrentDialogAttached() const;
     void setAddNewTorrentDialogAttached(bool attached);
 
+    // Enhanced option
+    bool getAutoBanUnknownPeer() const;
+    void setAutoBanUnknownPeer(bool checked);
+    bool getAutoBanBTPlayerPeer() const;
+    void setAutoBanBTPlayerPeer(bool checked);
+    bool getShadowBan() const;
+    void setShadowBan(bool checked);
+
 public slots:
     void setStatusFilterState(bool checked);
     void setCategoryFilterState(bool checked);
