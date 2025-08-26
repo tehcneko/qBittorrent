@@ -72,6 +72,7 @@
 #include "addnewtorrentdialog.h"
 #include "advancedsettings.h"
 #include "banlistoptionsdialog.h"
+#include "shadowbanlistoptionsdialog.h"
 #include "interfaces/iguiapplication.h"
 #include "ipsubnetwhitelistoptionsdialog.h"
 #include "rss/automatedrssdownloader.h"
@@ -943,6 +944,8 @@ void OptionsDialog::loadConnectionTabOptions()
     m_ui->IpFilterRefreshBtn->setEnabled(m_ui->checkIPFilter->isChecked());
     m_ui->checkIpFilterTrackers->setChecked(session->isTrackerFilteringEnabled());
 
+    m_ui->shadowBanEnabled->setChecked(session->isShadowBanEnabled());
+
     connect(m_ui->comboProtocol, qComboBoxCurrentIndexChanged, this, &ThisType::enableApplyButton);
     connect(m_ui->spinPort, qSpinBoxValueChanged, this, &ThisType::enableApplyButton);
     connect(m_ui->checkUPnP, &QAbstractButton::toggled, this, &ThisType::enableApplyButton);
@@ -988,6 +991,7 @@ void OptionsDialog::loadConnectionTabOptions()
     connect(m_ui->checkIPFilter, &QAbstractButton::toggled, m_ui->IpFilterRefreshBtn, &QWidget::setEnabled);
     connect(m_ui->textFilterPath, &FileSystemPathEdit::selectedPathChanged, this, &ThisType::enableApplyButton);
     connect(m_ui->checkIpFilterTrackers, &QAbstractButton::toggled, this, &ThisType::enableApplyButton);
+    connect(m_ui->shadowBanEnabled, &QAbstractButton::toggled, this, &ThisType::enableApplyButton);
 }
 
 void OptionsDialog::saveConnectionTabOptions() const
@@ -1031,6 +1035,9 @@ void OptionsDialog::saveConnectionTabOptions() const
     session->setIPFilteringEnabled(isIPFilteringEnabled());
     session->setTrackerFilteringEnabled(m_ui->checkIpFilterTrackers->isChecked());
     session->setIPFilterFile(m_ui->textFilterPath->selectedPath());
+
+    // Shadowban
+    session->setShadowBan(m_ui->shadowBanEnabled->isChecked());
 }
 
 void OptionsDialog::loadSpeedTabOptions()
@@ -1608,6 +1615,11 @@ void OptionsDialog::saveOptions() const
 bool OptionsDialog::isIPFilteringEnabled() const
 {
     return m_ui->checkIPFilter->isChecked();
+}
+
+bool OptionsDialog::isShadowBanEnabled() const
+{
+    return m_ui->shadowBanEnabled->isChecked();
 }
 
 Net::ProxyType OptionsDialog::getProxyType() const
@@ -2193,6 +2205,14 @@ bool OptionsDialog::schedTimesOk()
 void OptionsDialog::on_banListButton_clicked()
 {
     auto *dialog = new BanListOptionsDialog(this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(dialog, &QDialog::accepted, this, &OptionsDialog::enableApplyButton);
+    dialog->open();
+}
+
+void OptionsDialog::on_shadowBanListButton_clicked()
+{
+    auto *dialog = new ShadowBanListOptionsDialog(this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(dialog, &QDialog::accepted, this, &OptionsDialog::enableApplyButton);
     dialog->open();

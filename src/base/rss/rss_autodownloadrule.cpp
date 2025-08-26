@@ -457,7 +457,7 @@ AutoDownloadRule &AutoDownloadRule::operator=(const AutoDownloadRule &other)
 
 QJsonObject AutoDownloadRule::toJsonObject() const
 {
-    const BitTorrent::AddTorrentParams &addTorrentParams = m_dataPtr->addTorrentParams;
+    const BitTorrent::AddTorrentParams addTorrentParams = m_dataPtr->addTorrentParams;
 
     return {{S_ENABLED, isEnabled()}
         , {S_PRIORITY, priority()}

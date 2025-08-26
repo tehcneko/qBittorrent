@@ -51,6 +51,8 @@ public:
 
     void checkForUpdates();
     Version getNewVersion() const;
+    QString getNewContent() const;
+    QString getNextUpdate() const;
     bool updateProgram() const;
 
 signals:
@@ -75,5 +77,7 @@ private:
     Version m_fosshubVersion;
     Version m_qbtMainVersion;
     Version m_qbtBackupVersion;
+    QString m_nextUpdate;
+    QString m_content;
     QUrl m_updateURL;
 };
