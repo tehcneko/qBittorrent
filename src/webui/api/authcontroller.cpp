@@ -44,14 +44,14 @@ void AuthController::loginAction()
 {
     if (m_sessionManager->session())
     {
-        setStatus(APIStatus::Ok);
+        setResult(u"Ok."_s);
         return;
     }
 
     if (m_sessionManager->validateCredentials(params()[u"username"_s], params()[u"password"_s]))
     {
         m_sessionManager->sessionStart();
-        setStatus(APIStatus::Ok);
+        setResult(u"Ok."_s);
     }
     else
     {
