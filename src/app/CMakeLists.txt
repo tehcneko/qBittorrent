@@ -157,6 +157,9 @@ if (STACKTRACE)
                 /DEBUG
                 /PDBALTPATH:$<TARGET_PDB_FILE_NAME:qbt_app>
             )
+            target_link_options(qbt_app PRIVATE
+                /FORCE:MULTIPLE
+            )
         else()
             target_link_options(qbt_app PUBLIC LINKER:--export-dynamic)
 
