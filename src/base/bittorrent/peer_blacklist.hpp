@@ -19,7 +19,12 @@ bool is_bad_peer(const lt::peer_info& info)
 
   // TODO: trafficConsume by thank243(senis) but it's hard to determine GT0003 is legitimate client or not...
   // Anyway, block dt/torrent and Taipei-torrent with specific case first.
-  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(info.ip.data()));
+#if LIBTORRENT_VERSION_NUM >= 20100
+  const lt::tcp::endpoint ip = info.remote_endpoint();
+#else
+  const lt::tcp::endpoint &ip = info.ip;
+#endif
+  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(ip.data()));
   if (country == QLatin1String("CN") && std::regex_match(info.client, consume_filter)) {
       return true;
   }
@@ -30,7 +35,12 @@ bool is_bad_peer(const lt::peer_info& info)
 // Unknown Peer filter
 bool is_unknown_peer(const lt::peer_info& info)
 {
-  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(info.ip.data()));
+#if LIBTORRENT_VERSION_NUM >= 20100
+  const lt::tcp::endpoint ip = info.remote_endpoint();
+#else
+  const lt::tcp::endpoint &ip = info.ip;
+#endif
+  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(ip.data()));
   return info.client.find("Unknown") != std::string::npos && country == QLatin1String("CN");
 }
 
@@ -38,8 +48,13 @@ bool is_unknown_peer(const lt::peer_info& info)
 bool is_offline_downloader(const lt::peer_info& info)
 {
   static const std::regex id_filter("-LT(1220|2070)-");
-  unsigned short port = info.ip.port();
-  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(info.ip.data()));
+#if LIBTORRENT_VERSION_NUM >= 20100
+  const lt::tcp::endpoint ip = info.remote_endpoint();
+#else
+  const lt::tcp::endpoint &ip = info.ip;
+#endif
+  unsigned short port = ip.port();
+  QString country = Net::GeoIPManager::instance()->lookup(QHostAddress(ip.data()));
   // 115: Old data, may out of date.
   bool fake_transmission = port >= 65000 && country == QLatin1String("CN") && info.client.find("Transmission") != std::string::npos;
   // PikPak: PikPak is renting Worldstream server and announce as LT1220/LT2070, the best way is block the ip range via ip filter(?)
